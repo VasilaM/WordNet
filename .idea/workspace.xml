@@ -7,6 +7,7 @@
     <list default="true" id="c1e4f978-b3bd-4ae1-84e9-9e1170bce808" name="Default" comment="">
       <change afterPath="$PROJECT_DIR$/ShortestCommonAncestor.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/WordNet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hypernmyms3.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/COS 226.iml" beforeDir="false" afterPath="$PROJECT_DIR$/COS 226.iml" afterDir="false" />
     </list>
