@@ -2,6 +2,7 @@ import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.DirectedCycle;
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -113,14 +114,23 @@ public class ShortestCommonAncestor {
         In in = new In(args[0]);
         Digraph G = new Digraph(in);
         ShortestCommonAncestor sca = new ShortestCommonAncestor(G);
+        Queue<Integer> q1 = new Queue<>();
+        Queue<Integer> q2 = new Queue<>();
+        q1.enqueue(6);
+        q1.enqueue(3);
+        q1.enqueue(1);
+        q1.enqueue(0);
+        q2.enqueue(9);
+        q2.enqueue(5);
         while (!StdIn.isEmpty()) {
             int v = StdIn.readInt();
             int w = StdIn.readInt();
-            // int length = sca.length(v, w);
-            // int ancestor = sca.ancestor(v, w);
-            int length = sca.lengthSubset(v, w);
-            int ancestor = sca.ancestorSubset(v, w);
+            int length = sca.length(v, w);
+            int ancestor = sca.ancestor(v, w);
+            int length1 = sca.lengthSubset(q1, q2);
+            int ancestor1 = sca.ancestorSubset(q1, q2);
             StdOut.printf("length = %d, ancestor = %d\n", length, ancestor);
+            StdOut.printf("length = %d, ancestor = %d\n", length1, ancestor1);
         }
     }
 

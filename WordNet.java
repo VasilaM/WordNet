@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class WordNet {
     private HashMap<Integer, Queue<String>> map;
     private SET<String> set;
+    private Digraph digraph;
 
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) {
@@ -30,7 +31,7 @@ public class WordNet {
             size++;
         }
 
-        Digraph digraph = new Digraph(size);
+        digraph = new Digraph(size);
 
         while (!file2.isEmpty()) {
             String line = file2.readLine();
@@ -62,14 +63,15 @@ public class WordNet {
 
     // a synset (second field of synsets.txt) that is a shortest common ancestor
     // of noun1 and noun2 (defined below)
-    // public String sca(String noun1, String noun2) {
-    //
-    // }
+    public String sca(String noun1, String noun2) {
+        ShortestCommonAncestor sca = new ShortestCommonAncestor(digraph);
+    }
 
     // distance between noun1 and noun2 (defined below)
-    // public int distance(String noun1, String noun2) {
-    //
-    // }
+    public int distance(String noun1, String noun2) {
+        ShortestCommonAncestor sca = new ShortestCommonAncestor(digraph);
+        sca.length(noun1, noun2);
+    }
 
     // unit testing (required)
     public static void main(String[] args) {
