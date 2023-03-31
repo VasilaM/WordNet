@@ -1,11 +1,13 @@
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.SET;
 
 import java.util.HashMap;
 
 public class WordNet {
     private HashMap<Integer, Queue<String>> map;
+    private SET<String> set;
 
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) {
@@ -13,6 +15,7 @@ public class WordNet {
         In file2 = new In(hypernyms);
         int size = 0;
         map = new HashMap<>();
+        set = new SET<>();
         // read in data and store it
         while (!file1.isEmpty()) {
             String line = file1.readLine();
@@ -21,6 +24,7 @@ public class WordNet {
             Queue<String> queue = new Queue<>();
             for (int i = 0; i < second.length; i++) {
                 queue.enqueue(second[i]);
+                set.add(second[i]);
             }
             map.put(Integer.parseInt(first[0]), queue);
             size++;
@@ -52,9 +56,9 @@ public class WordNet {
     }
 
     // is the word a WordNet noun?
-    // public boolean isNoun(String word) {
-    //     map.containsValue();
-    // }
+    public boolean isNoun(String word) {
+        return set.contains(word);
+    }
 
     // a synset (second field of synsets.txt) that is a shortest common ancestor
     // of noun1 and noun2 (defined below)
