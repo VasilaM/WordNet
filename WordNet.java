@@ -9,6 +9,7 @@ public class WordNet {
     // for ID of the vertices and queues
     private SET<String> set; // set stores words for isNoun()
     private Digraph digraph; // digraph
+    private ShortestCommonAncestor sca;
 
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) {
@@ -43,17 +44,12 @@ public class WordNet {
                                 Integer.parseInt(first[i]));
             }
         }
+        sca = new ShortestCommonAncestor(digraph);
     }
 
     // the set of all WordNet nouns
     public Iterable<String> nouns() {
-        Queue<String> queue = new Queue<>();
-        for (int i = 0; i < map.size(); i++) {
-            for (String s : map.get(i)) {
-                queue.enqueue(s);
-            }
-        }
-        return queue;
+        return set;
     }
 
     // is the word a WordNet noun?
@@ -83,7 +79,6 @@ public class WordNet {
                     queue2.enqueue(i);
                 }
         }
-        ShortestCommonAncestor sca = new ShortestCommonAncestor(digraph);
         return map.get(sca.ancestorSubset(queue1, queue2)).peek();
     }
 
@@ -108,7 +103,6 @@ public class WordNet {
                     queue2.enqueue(i);
                 }
         }
-        ShortestCommonAncestor sca = new ShortestCommonAncestor(digraph);
         return sca.lengthSubset(queue1, queue2);
     }
 
