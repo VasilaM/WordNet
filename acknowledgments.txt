@@ -15,7 +15,7 @@ Programming Assignment 5:  WordNet
  *      9/16/22 John von Neumann (lab TA)
  ******************************************************************************/
 
-[write the dates and help received here]
+3/31/23 Austin Li (lab TA)
 
 
 /******************************************************************************
@@ -30,7 +30,10 @@ Programming Assignment 5:  WordNet
  *      with University regulations.  /s/ Alan Turing
  ******************************************************************************/
 
-[write and sign the pledge here]
+This programming assignment represents my own work in accordance
+with University regulations.  /s/ Caroline Rasmussen
+This programming assignment represents my own work in accordance
+with University regulations.  /s/ Vasila Mirshamsova
 
 
 
@@ -40,5 +43,5 @@ Programming Assignment 5:  WordNet
  *  Write "NA" if you did not work with a partner.
  ******************************************************************************/
 
-YES / NO / NA
+YES
 

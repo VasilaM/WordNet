@@ -6,7 +6,7 @@ import edu.princeton.cs.algs4.SeparateChainingHashST;
 public class WordNet {
     // map vertex ID to synset
     private SeparateChainingHashST<Integer, String> mapOfInts;
-    // for ID of the vertices and queues
+    // ShortestCommonAncestor object
     private ShortestCommonAncestor sca;
     // map noun to set of vertex IDs
     private SeparateChainingHashST<String, Queue<Integer>> mapOfStrings;
@@ -19,12 +19,14 @@ public class WordNet {
         mapOfInts = new SeparateChainingHashST<>();
         mapOfStrings = new SeparateChainingHashST<>();
 
-        // read synsets.txt and store it in hash map and set
+        // read synsets.txt and store into both hash maps
         while (!file1.isEmpty()) {
             String line = file1.readLine();
             String[] first = line.split(",");
+            // put id and synset
             mapOfInts.put(Integer.parseInt(first[0]), first[1]);
             String[] second = first[1].split(" ");
+            // put or update queue of vertices for each noun
             for (int i = 0; i < second.length; i++) {
                 if (mapOfStrings.contains(second[i])) {
                     mapOfStrings.get(second[i]).enqueue(
@@ -71,7 +73,7 @@ public class WordNet {
         Queue<Integer> queue1 = new Queue<>();
         Queue<Integer> queue2 = new Queue<>();
 
-        // find vertex IDs of noun1 and noun2
+        // get queue of IDs for noun1
         for (String noun : mapOfStrings.keys()) {
             if (noun.equals(noun1)) {
                 queue1 = mapOfStrings.get(noun1);
@@ -79,9 +81,10 @@ public class WordNet {
         }
         for (String noun : mapOfStrings.keys()) {
             if (noun.equals(noun2)) {
-                queue1 = mapOfStrings.get(noun2);
+                queue2 = mapOfStrings.get(noun2);
             }
         }
+        // find vertex ID of sca and get the synset for this vertex
         return mapOfInts.get(sca.ancestorSubset(queue1, queue2));
     }
 
@@ -93,7 +96,6 @@ public class WordNet {
         Queue<Integer> queue1 = new Queue<>();
         Queue<Integer> queue2 = new Queue<>();
 
-        // find vertex IDs of noun1 and noun2
         for (String noun : mapOfStrings.keys()) {
             if (noun.equals(noun1)) {
                 queue1 = mapOfStrings.get(noun1);
@@ -101,9 +103,10 @@ public class WordNet {
         }
         for (String noun : mapOfStrings.keys()) {
             if (noun.equals(noun2)) {
-                queue1 = mapOfStrings.get(noun2);
+                queue2 = mapOfStrings.get(noun2);
             }
         }
+        // find shortest distance between the subsets of vertex IDs (nouns)
         return sca.lengthSubset(queue1, queue2);
     }
 
