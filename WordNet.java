@@ -1,40 +1,45 @@
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Queue;
-import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.algs4.SeparateChainingHashST;
 
 public class WordNet {
-    private SeparateChainingHashST<Integer, Queue<String>> map; // hash map
+    // map vertex ID to synset
+    private SeparateChainingHashST<Integer, String> mapOfInts;
     // for ID of the vertices and queues
-    private SET<String> set; // set stores words for isNoun()
-    private Digraph digraph; // digraph
     private ShortestCommonAncestor sca;
+    // map noun to set of vertex IDs
+    private SeparateChainingHashST<String, Queue<Integer>> mapOfStrings;
 
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) {
         In file1 = new In(synsets);
         In file2 = new In(hypernyms);
         int size = 0;
-        map = new SeparateChainingHashST<>();
-        set = new SET<>();
+        mapOfInts = new SeparateChainingHashST<>();
+        mapOfStrings = new SeparateChainingHashST<>();
 
         // read synsets.txt and store it in hash map and set
         while (!file1.isEmpty()) {
             String line = file1.readLine();
             String[] first = line.split(",");
+            mapOfInts.put(Integer.parseInt(first[0]), first[1]);
             String[] second = first[1].split(" ");
-            Queue<String> queue = new Queue<>();
             for (int i = 0; i < second.length; i++) {
-                queue.enqueue(second[i]);
-                if (!set.contains(second[i]))
-                    set.add(second[i]);
+                if (mapOfStrings.contains(second[i])) {
+                    mapOfStrings.get(second[i]).enqueue(
+                            Integer.parseInt(first[0]));
+                }
+                else {
+                    Queue<Integer> queue = new Queue<>();
+                    queue.enqueue(Integer.parseInt(first[0]));
+                    mapOfStrings.put(second[i], queue);
+                }
             }
-            map.put(Integer.parseInt(first[0]), queue);
             size++;
         }
 
-        digraph = new Digraph(size);
+        Digraph digraph = new Digraph(size);
         // add edges to digraph from hypernyms.txt
         while (!file2.isEmpty()) {
             String line = file2.readLine();
@@ -49,12 +54,12 @@ public class WordNet {
 
     // the set of all WordNet nouns
     public Iterable<String> nouns() {
-        return set;
+        return mapOfStrings.keys();
     }
 
     // is the word a WordNet noun?
     public boolean isNoun(String word) {
-        return set.contains(word);
+        return mapOfStrings.contains(word);
     }
 
     // a synset (second field of synsets.txt) that is a shortest common ancestor
@@ -67,41 +72,37 @@ public class WordNet {
         Queue<Integer> queue2 = new Queue<>();
 
         // find vertex IDs of noun1 and noun2
-        for (int i : map.keys()) { // iterate through vertices
-            for (String j : map.get(i)) // iterate through queue at i
-                if (j.equals(noun1)) {
-                    queue1.enqueue(i); // add vertices containing noun to queue
-                }
+        for (String noun : mapOfStrings.keys()) {
+            if (noun.equals(noun1)) {
+                queue1 = mapOfStrings.get(noun1);
+            }
         }
-        for (int i : map.keys()) {
-            for (String j : map.get(i))
-                if (j.equals(noun2)) {
-                    queue2.enqueue(i);
-                }
+        for (String noun : mapOfStrings.keys()) {
+            if (noun.equals(noun2)) {
+                queue1 = mapOfStrings.get(noun2);
+            }
         }
-        return map.get(sca.ancestorSubset(queue1, queue2)).peek();
+        return mapOfInts.get(sca.ancestorSubset(queue1, queue2));
     }
 
     // distance between noun1 and noun2 (defined below)
     public int distance(String noun1, String noun2) {
-        if (!this.isNoun(noun1) || !this.isNoun(noun2)) {
+        if (!this.isNoun(noun1) || !this.isNoun(noun2))
             throw new IllegalArgumentException("noun not in WordNet");
-        }
 
         Queue<Integer> queue1 = new Queue<>();
         Queue<Integer> queue2 = new Queue<>();
 
-        for (int i : map.keys()) {
-            for (String j : map.get(i))
-                if (j.equals(noun1)) {
-                    queue1.enqueue(i);
-                }
+        // find vertex IDs of noun1 and noun2
+        for (String noun : mapOfStrings.keys()) {
+            if (noun.equals(noun1)) {
+                queue1 = mapOfStrings.get(noun1);
+            }
         }
-        for (int i : map.keys()) {
-            for (String j : map.get(i))
-                if (j.equals(noun2)) {
-                    queue2.enqueue(i);
-                }
+        for (String noun : mapOfStrings.keys()) {
+            if (noun.equals(noun2)) {
+                queue1 = mapOfStrings.get(noun2);
+            }
         }
         return sca.lengthSubset(queue1, queue2);
     }
