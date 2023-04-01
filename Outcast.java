@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Outcast {
-    private WordNet wordnet;
+    private WordNet wordnet; // wordnet
 
     // constructor takes a WordNet object
     public Outcast(WordNet wordnet) {
@@ -12,14 +12,16 @@ public class Outcast {
     // given an array of WordNet nouns, return an outcast
     public String outcast(String[] nouns) {
         String outcast = null;
-        int minDist = 0;
-        int dist = 0;
+        int maxDist = 0;
+
         for (int i = 0; i < nouns.length; i++) {
+            int dist = 0;
+            // find distance from i to every other vertex
             for (int j = 0; j < nouns.length; j++) {
                 dist += wordnet.distance(nouns[i], nouns[j]);
             }
-            if (dist > minDist) {
-                minDist = dist;
+            if (dist > maxDist) {
+                maxDist = dist;
                 outcast = nouns[i];
             }
         }
