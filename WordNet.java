@@ -26,7 +26,8 @@ public class WordNet {
             Queue<String> queue = new Queue<>();
             for (int i = 0; i < second.length; i++) {
                 queue.enqueue(second[i]);
-                set.add(second[i]);
+                if (!set.contains(second[i]))
+                    set.add(second[i]);
             }
             map.put(Integer.parseInt(first[0]), queue);
             size++;
@@ -66,26 +67,24 @@ public class WordNet {
         if (!this.isNoun(noun1) || !this.isNoun(noun2))
             throw new IllegalArgumentException("noun not in WordNet");
 
-        int id1 = 0;
-        int id2 = 0;
+        Queue<Integer> queue1 = new Queue<>();
+        Queue<Integer> queue2 = new Queue<>();
 
         // find vertex IDs of noun1 and noun2
         for (int i : map.keys()) { // iterate through vertices
             for (String j : map.get(i)) // iterate through queue at i
                 if (j.equals(noun1)) {
-                    id1 = i;
-                    break; // break when noun found
+                    queue1.enqueue(i); // add vertices containing noun to queue
                 }
         }
         for (int i : map.keys()) {
             for (String j : map.get(i))
                 if (j.equals(noun2)) {
-                    id2 = i;
-                    break;
+                    queue2.enqueue(i);
                 }
         }
         ShortestCommonAncestor sca = new ShortestCommonAncestor(digraph);
-        return map.get(sca.ancestor(id1, id2)).peek();
+        return map.get(sca.ancestorSubset(queue1, queue2)).peek();
     }
 
     // distance between noun1 and noun2 (defined below)
@@ -94,25 +93,23 @@ public class WordNet {
             throw new IllegalArgumentException("noun not in WordNet");
         }
 
-        int id1 = 0;
-        int id2 = 0;
+        Queue<Integer> queue1 = new Queue<>();
+        Queue<Integer> queue2 = new Queue<>();
 
         for (int i : map.keys()) {
             for (String j : map.get(i))
                 if (j.equals(noun1)) {
-                    id1 = i;
-                    break;
+                    queue1.enqueue(i);
                 }
         }
         for (int i : map.keys()) {
             for (String j : map.get(i))
                 if (j.equals(noun2)) {
-                    id2 = i;
-                    break;
+                    queue2.enqueue(i);
                 }
         }
         ShortestCommonAncestor sca = new ShortestCommonAncestor(digraph);
-        return sca.length(id1, id2);
+        return sca.lengthSubset(queue1, queue2);
     }
 
     // unit testing (required)
